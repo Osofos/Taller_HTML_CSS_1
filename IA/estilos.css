@@ -1,0 +1,1164 @@
+/* ==========================================================================
+   Plataforma de Referidos y Fidelización · CAC-PJL
+   Sistema visual: base Bevel (cloudlight, tinta, Cloud Cards, cápsulas)
+   + energía Slush (contornos negros, paleta sticker, bandas, cintas 3D)
+   ========================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root {
+    /* Neutros (Bevel) */
+    --blanco: #ffffff;
+    --tinta: #222326;
+    --carbon: #1f2025;
+    --nube: #ebf0f8;
+    --gris: #747679;
+    --gris-lectura: #5b5e63;
+
+    /* Paleta sticker (Slush) */
+    --negro: #000000;
+    --cielo: #dceeff;
+    --electrico: #4da2ff;
+    --menta: #55db9c;
+    --lavanda: #e9ccff;
+    --ember: #fb4903;
+    --sol: #ffd731;
+    --violeta: #5c4ade;
+
+    /* Acentos de datos (Bevel) */
+    --verde: #31ce01;
+    --azul: #415eee;
+    --lila: #b9a6ff;
+    --coral: #ffab94;
+
+    /* Atmósfera del hero (Bevel Hero Sky) */
+    --gradiente-hero: linear-gradient(#d2e5ff, #fff9ee);
+
+    /* Tipografía */
+    --fuente-ui: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --fuente-display: "Bowlby One", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    /* Espaciado (base 8px) */
+    --esp-8: 8px;
+    --esp-16: 16px;
+    --esp-24: 24px;
+    --esp-32: 32px;
+    --esp-40: 40px;
+    --esp-48: 48px;
+    --esp-80: 80px;
+    --esp-96: 96px;
+
+    /* Radios */
+    --radio-img: 16px;
+    --radio-tarjeta: 24px;
+    --radio-tarjeta-xl: 32px;
+    --radio-grande: 40px;
+    --radio-pildora: 9999px;
+
+    /* Layout */
+    --ancho: 1200px;
+    --gutter: clamp(16px, 4vw, 40px);
+    --ritmo-seccion: clamp(56px, 8vw, 96px);
+
+    /* Movimiento */
+    --curva: cubic-bezier(.2, .8, .2, 1);
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background-color: var(--blanco);
+    color: var(--tinta);
+    font-family: var(--fuente-ui);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background: var(--sol);
+    color: var(--negro);
+}
+
+a {
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 3px solid var(--violeta);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+p {
+    margin: 0 0 var(--esp-16);
+}
+
+strong {
+    font-weight: 600;
+}
+
+/* ---------- 3. Barra de progreso (mejora progresiva) ---------- */
+.progreso {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 6px;
+    background: var(--electrico);
+    border-bottom: 1px solid var(--negro);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    z-index: 100;
+    pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+    .progreso {
+        animation: progreso linear both;
+        animation-timeline: scroll(root);
+    }
+}
+
+@keyframes progreso {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* ---------- 4. Hero ---------- */
+.hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 16px 16px 0;
+    padding: clamp(72px, 11vw, 136px) clamp(20px, 5vw, 64px) clamp(120px, 15vw, 200px);
+    border-radius: var(--radio-tarjeta-xl);
+    background: var(--gradiente-hero);
+    text-align: center;
+}
+
+.hero__texto {
+    position: relative;
+    z-index: 3;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    margin: 0 0 var(--esp-24);
+    font-size: clamp(2.25rem, 6.6vw, 5rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--tinta);
+    text-wrap: balance;
+    animation: entrada .9s var(--curva) both;
+}
+
+.hero p {
+    max-width: 38ch;
+    margin: 0 auto;
+    font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+    line-height: 1.3;
+    color: var(--gris-lectura);
+    text-wrap: balance;
+    animation: entrada .9s .15s var(--curva) both;
+}
+
+@keyframes entrada {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cintas 3D (Slush) */
+.cinta {
+    position: absolute;
+    z-index: 0;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-pildora);
+}
+
+.cinta--1 {
+    left: -10%;
+    bottom: -44px;
+    width: 72%;
+    height: 112px;
+    background: var(--electrico);
+    transform: rotate(-6deg);
+    animation: oleaje 9s ease-in-out infinite;
+}
+
+.cinta--2 {
+    right: -12%;
+    bottom: 46px;
+    width: 46%;
+    height: 68px;
+    background: var(--lavanda);
+    transform: rotate(5deg);
+    animation: oleaje 11s ease-in-out infinite reverse;
+}
+
+@keyframes oleaje {
+    0%, 100% {
+        translate: 0 0;
+    }
+    50% {
+        translate: 18px -10px;
+    }
+}
+
+/* Stickers */
+.sticker {
+    --rot: 0deg;
+    position: absolute;
+    z-index: 1;
+    border: 1px solid var(--negro);
+    transform: rotate(var(--rot));
+    animation: flotar 7s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0%, 100% {
+        transform: rotate(var(--rot)) translateY(0);
+    }
+    50% {
+        transform: rotate(calc(var(--rot) + 6deg)) translateY(-14px);
+    }
+}
+
+.sticker--moneda {
+    --rot: -12deg;
+    top: 14%;
+    left: 8%;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--sol);
+}
+
+.sticker--moneda::after {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+}
+
+.sticker--cohete {
+    --rot: 14deg;
+    top: 10%;
+    right: 9%;
+    width: 68px;
+    height: 112px;
+    border-radius: 60px 60px 20px 20px;
+    background: var(--ember);
+    animation-delay: -2s;
+}
+
+.sticker--cohete::after {
+    content: "";
+    position: absolute;
+    top: 26px;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+    background: var(--blanco);
+}
+
+.sticker--billetera {
+    --rot: -8deg;
+    bottom: 28%;
+    left: 5%;
+    width: 124px;
+    height: 86px;
+    border-radius: 16px;
+    background: var(--violeta);
+    animation-delay: -4s;
+}
+
+.sticker--billetera::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    width: 22px;
+    height: 22px;
+    margin-top: -11px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+    background: var(--sol);
+}
+
+.sticker--check {
+    --rot: 10deg;
+    bottom: 32%;
+    right: 6%;
+    width: 78px;
+    height: 78px;
+    border-radius: 20px;
+    background: var(--menta);
+    animation-delay: -1s;
+}
+
+.sticker--check::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 28px;
+    width: 18px;
+    height: 32px;
+    border-right: 5px solid var(--negro);
+    border-bottom: 5px solid var(--negro);
+    transform: rotate(45deg);
+}
+
+.sticker--anillo {
+    --rot: 0deg;
+    top: 56%;
+    left: 24%;
+    width: 72px;
+    height: 72px;
+    border: 12px solid;
+    border-color: var(--verde) var(--azul) var(--lila) var(--coral);
+    border-radius: 50%;
+    animation: giro 16s linear infinite;
+}
+
+@keyframes giro {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- 5. Menú en cápsula flotante ---------- */
+.menu {
+    position: sticky;
+    top: 12px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: var(--esp-8);
+    width: min(1100px, calc(100% - 32px));
+    margin: -36px auto 0;
+    padding: 12px 16px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-tarjeta-xl);
+    background: rgba(255, 255, 255, .86);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.menu::-webkit-scrollbar {
+    display: none;
+}
+
+.menu strong {
+    flex: none;
+    padding: 0 8px 0 4px;
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: .01em;
+    color: var(--tinta);
+}
+
+.menu a {
+    flex: none;
+    display: inline-block;
+    padding: 9px 16px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-pildora);
+    background: var(--blanco);
+    color: var(--negro);
+    font-size: .875rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-decoration: none;
+    transition: transform .25s var(--curva), background-color .25s, color .25s;
+}
+
+.menu a:hover {
+    background: var(--sol);
+    transform: translateY(-2px);
+}
+
+.menu a:active {
+    transform: translateY(0) scale(.97);
+}
+
+.menu a.activo {
+    background: var(--carbon);
+    color: var(--nube);
+}
+
+/* ---------- 6. Estructura de secciones ---------- */
+main {
+    display: block;
+    margin-top: calc(-1 * var(--esp-48));
+    padding-top: var(--esp-48);
+}
+
+.banda {
+    padding-block: var(--ritmo-seccion);
+    scroll-margin-top: 80px;
+}
+
+.banda--blanca {
+    background: var(--blanco);
+}
+
+.banda--cielo {
+    background: var(--cielo);
+}
+
+.banda--nube {
+    background: var(--nube);
+}
+
+.contenedor {
+    width: min(100% - 2 * var(--gutter), var(--ancho));
+    margin-inline: auto;
+}
+
+/* ---------- 7. Títulos ---------- */
+h2 {
+    position: relative;
+    margin: 0 0 var(--esp-48);
+    padding-bottom: var(--esp-24);
+    font-family: var(--fuente-display);
+    font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+    font-weight: 400;
+    line-height: .98;
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+    text-wrap: balance;
+    scroll-margin-top: 100px;
+}
+
+h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 96px;
+    height: 14px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-pildora);
+    background: var(--sol);
+    transition: width .5s var(--curva);
+}
+
+section:hover h2::after {
+    width: 160px;
+}
+
+h3 {
+    margin: var(--esp-48) 0 var(--esp-16);
+    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--tinta);
+    scroll-margin-top: 100px;
+    text-wrap: balance;
+}
+
+h2 + h3 {
+    margin-top: 0;
+}
+
+.banda h3::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+    background: var(--sol);
+    vertical-align: .08em;
+}
+
+h4 {
+    display: inline-block;
+    margin: var(--esp-32) 0 var(--esp-16);
+    padding: 6px 18px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-pildora);
+    background: var(--lavanda);
+    color: var(--negro);
+    font-size: .875rem;
+    font-weight: 700;
+    letter-spacing: .032em;
+    scroll-margin-top: 100px;
+}
+
+#solucion {
+    background: var(--menta);
+}
+
+.lead {
+    max-width: 72ch;
+    font-size: clamp(1.0625rem, 1.8vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--gris-lectura);
+}
+
+.nota {
+    margin-top: var(--esp-16);
+    font-size: .9375rem;
+    color: var(--gris-lectura);
+}
+
+/* ---------- 8. Tablas ---------- */
+.tabla-wrap {
+    margin: var(--esp-16) 0 var(--esp-24);
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-tarjeta);
+    background: var(--blanco);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    min-width: 640px;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: .9375rem;
+}
+
+table.tabla-datos,
+.tabla-wrap table:has(th:nth-child(2):last-child) {
+    min-width: 480px;
+}
+
+th,
+td {
+    padding: 16px 20px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #dbe3f0;
+}
+
+thead th {
+    background: var(--carbon);
+    color: var(--nube);
+    font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+tbody tr:last-child > *,
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr {
+    transition: background-color .2s;
+}
+
+tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--nube) 45%, var(--blanco));
+}
+
+tbody tr:hover {
+    background: var(--cielo);
+}
+
+.tabla-datos th[scope="row"] {
+    width: 32%;
+    background: var(--nube);
+    color: var(--tinta);
+    font-weight: 600;
+}
+
+.id-col td:first-child {
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--violeta);
+}
+
+/* Etiquetas de prioridad */
+.chip {
+    display: inline-block;
+    padding: 3px 14px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-pildora);
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    white-space: nowrap;
+}
+
+.chip--must {
+    background: var(--menta);
+}
+
+.chip--should {
+    background: var(--lavanda);
+}
+
+/* ---------- 9. Listas ---------- */
+ul,
+ol {
+    margin: 0 0 var(--esp-24);
+}
+
+.lista-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: var(--esp-16);
+    margin: var(--esp-16) 0 var(--esp-32);
+    padding: 0;
+    list-style: none;
+}
+
+.lista-columna {
+    grid-template-columns: 1fr;
+}
+
+.lista-tarjetas li {
+    position: relative;
+    padding: 20px 22px 20px 54px;
+    border: 1px solid var(--negro);
+    border-radius: 20px;
+    background: var(--blanco);
+    transition: transform .3s var(--curva), background-color .3s;
+}
+
+.lista-tarjetas li::before {
+    content: "";
+    position: absolute;
+    top: 24px;
+    left: 22px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+    background: var(--electrico);
+}
+
+.lista-tarjetas li:nth-child(6n+2)::before { background: var(--menta); }
+.lista-tarjetas li:nth-child(6n+3)::before { background: var(--sol); }
+.lista-tarjetas li:nth-child(6n+4)::before { background: var(--ember); }
+.lista-tarjetas li:nth-child(6n+5)::before { background: var(--violeta); }
+.lista-tarjetas li:nth-child(6n+6)::before { background: var(--lavanda); }
+
+.lista-tarjetas li:hover {
+    transform: translateY(-4px) rotate(-.4deg);
+    background: var(--lavanda);
+}
+
+.lista-simple {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lista-simple li {
+    position: relative;
+    margin-bottom: 8px;
+    padding-left: 24px;
+}
+
+.lista-simple li:last-child {
+    margin-bottom: 0;
+}
+
+.lista-simple li::before {
+    content: "";
+    position: absolute;
+    top: .55em;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--negro);
+    border-radius: 50%;
+    background: var(--sol);
+}
+
+/* ---------- 10. Aviso ---------- */
+.aviso {
+    margin: 0 0 var(--esp-32);
+    padding: 20px 28px;
+    border: 1px solid var(--negro);
+    border-radius: 20px;
+    background: var(--lavanda);
+}
+
+.aviso p {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ---------- 11. Casos de uso ---------- */
+.rejilla-casos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--esp-24);
+}
+
+.caso {
+    --acento: var(--electrico);
+    position: relative;
+    overflow: hidden;
+    padding: 56px 32px 32px;
+    border: 1px solid var(--negro);
+    border-radius: var(--radio-tarjeta);
+    background: var(--blanco);
+    transition: transform .35s var(--curva), background-color .35s;
+}
+
+.caso::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 18px;
+    border-bottom: 1px solid var(--negro);
+    background: var(--acento);
+}
+
+.caso:nth-child(5n+2) { --acento: var(--menta); }
+.caso:nth-child(5n+3) { --acento: var(--sol); }
+.caso:nth-child(5n+4) { --acento: var(--lavanda); }
+.caso:nth-child(5n+5) { --acento: var(--ember); }
+
+.caso:hover {
+    transform: translateY(-6px) rotate(-.3deg);
+    background: color-mix(in srgb, var(--acento) 12%, var(--blanco));
+}
+
+.caso h3 {
+    margin-top: 0;
+}
+
+.caso h3::before {
+    background: var(--acento);
+}
+
+.caso p {
+    margin-bottom: 12px;
+}
+
+.caso strong {
+    color: var(--violeta);
+}
+
+.caso ol {
+    margin: 8px 0 0;
+    padding-left: 24px;
+}
+
+.caso ol li {
+    margin-bottom: 10px;
+    padding-left: 4px;
+}
+
+.caso ol li::marker {
+    font-weight: 700;
+    color: var(--violeta);
+}
+
+/* ---------- 12. Ideas ---------- */
+.rejilla-ideas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--esp-24);
+    margin-top: var(--esp-40);
+}
+
+.idea {
+    --acento: var(--electrico);
+    padding: var(--esp-32);
+    border-radius: var(--radio-tarjeta);
+    background: var(--blanco);
+    transition: transform .35s var(--curva), background-color .35s;
+}
+
+.idea::before {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    border: 1px solid var(--negro);
+    border-radius: 16px;
+    background: var(--acento);
+    transform: rotate(-8deg);
+    transition: transform .4s var(--curva), border-radius .4s var(--curva);
+}
+
+.idea:nth-child(6n+2) { --acento: var(--menta); }
+.idea:nth-child(6n+3) { --acento: var(--sol); }
+.idea:nth-child(6n+4) { --acento: var(--lavanda); }
+.idea:nth-child(6n+5) { --acento: var(--ember); }
+.idea:nth-child(6n+6) { --acento: var(--violeta); }
+
+.idea:nth-child(3n+2)::before {
+    border-radius: 50%;
+}
+
+.idea:hover {
+    transform: translateY(-6px);
+    background: color-mix(in srgb, var(--acento) 14%, var(--blanco));
+}
+
+.idea:hover::before {
+    transform: rotate(10deg) scale(1.12);
+}
+
+.idea h3 {
+    margin: 0 0 12px;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.1;
+}
+
+.idea p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--gris-lectura);
+}
+
+/* ---------- 13. Conclusión ---------- */
+.conclusion {
+    position: relative;
+    overflow: hidden;
+    margin-top: var(--esp-80);
+    padding: clamp(28px, 5vw, 64px);
+    border-radius: var(--radio-grande);
+    background: var(--carbon);
+    color: var(--nube);
+}
+
+.conclusion h3 {
+    position: relative;
+    z-index: 1;
+    margin-top: 0;
+    max-width: 18ch;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    letter-spacing: -0.03em;
+    color: var(--blanco);
+}
+
+.conclusion h3::before {
+    display: none;
+}
+
+.conclusion p {
+    position: relative;
+    z-index: 1;
+    max-width: 68ch;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--nube);
+}
+
+.conclusion p:last-child {
+    margin-bottom: 0;
+}
+
+.conclusion__sticker {
+    position: absolute;
+    border: 1px solid var(--nube);
+}
+
+.conclusion__sticker--a {
+    top: -50px;
+    right: -30px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: var(--violeta);
+    animation: flotar 9s ease-in-out infinite;
+    --rot: 0deg;
+}
+
+.conclusion__sticker--b {
+    right: 12%;
+    bottom: -36px;
+    width: 120px;
+    height: 120px;
+    border-radius: 32px;
+    background: var(--sol);
+    --rot: 12deg;
+    transform: rotate(12deg);
+    animation: flotar 8s -3s ease-in-out infinite;
+}
+
+/* ---------- 14. Pie ---------- */
+.pie {
+    margin: 16px;
+    padding: var(--esp-40) var(--esp-24);
+    border-radius: var(--radio-tarjeta-xl);
+    background: var(--carbon);
+    color: var(--nube);
+    text-align: center;
+}
+
+.pie p {
+    max-width: 70ch;
+    margin: 0 auto;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* ---------- 15. Aparición al hacer scroll ---------- */
+.js .revelar {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .7s var(--curva), transform .7s var(--curva);
+}
+
+.js .revelar.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hover de tarjetas con revelado: mantener la transición propia */
+.js .caso.revelar.visible,
+.js .idea.revelar.visible {
+    transition: opacity .7s var(--curva), transform .35s var(--curva), background-color .35s;
+}
+
+.js .lista-tarjetas.revelar li {
+    opacity: 0;
+    transform: translateY(16px);
+}
+
+.js .lista-tarjetas.revelar.visible li {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .6s var(--curva), transform .6s var(--curva), background-color .3s;
+}
+
+.js .lista-tarjetas.revelar.visible li:nth-child(2) { transition-delay: .06s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(3) { transition-delay: .12s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(4) { transition-delay: .18s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(5) { transition-delay: .24s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(6) { transition-delay: .30s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(7) { transition-delay: .36s; }
+.js .lista-tarjetas.revelar.visible li:nth-child(8) { transition-delay: .42s; }
+
+.js .lista-tarjetas.revelar.visible li:hover {
+    transition-delay: 0s;
+    transform: translateY(-4px) rotate(-.4deg);
+}
+
+/* ---------- 16. Responsive ---------- */
+@media (max-width: 1024px) {
+    .rejilla-ideas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 860px) {
+    .rejilla-casos {
+        grid-template-columns: 1fr;
+    }
+
+    .sticker--anillo {
+        display: none;
+    }
+}
+
+@media (max-width: 720px) {
+    .hero {
+        margin: 8px 8px 0;
+        border-radius: 24px;
+    }
+
+    .sticker--moneda {
+        top: 6%;
+        left: 4%;
+        width: 56px;
+        height: 56px;
+    }
+
+    .sticker--moneda::after {
+        inset: 9px;
+    }
+
+    .sticker--cohete {
+        top: 5%;
+        right: 5%;
+        width: 44px;
+        height: 72px;
+    }
+
+    .sticker--cohete::after {
+        top: 16px;
+        width: 16px;
+        height: 16px;
+        margin-left: -8px;
+    }
+
+    .sticker--billetera {
+        bottom: 24%;
+        left: 3%;
+        width: 80px;
+        height: 56px;
+    }
+
+    .sticker--billetera::after {
+        right: 9px;
+        width: 14px;
+        height: 14px;
+        margin-top: -7px;
+    }
+
+    .sticker--check {
+        display: none;
+    }
+
+    .cinta--1 {
+        height: 84px;
+        bottom: -34px;
+    }
+
+    .cinta--2 {
+        height: 52px;
+        bottom: 36px;
+    }
+
+    .menu {
+        width: calc(100% - 16px);
+        margin-top: -28px;
+        padding: 10px 12px;
+        border-radius: 28px;
+    }
+
+    .menu strong {
+        font-size: 1rem;
+    }
+
+    .menu a {
+        padding: 8px 14px;
+        font-size: .8125rem;
+    }
+
+    h2 {
+        margin-bottom: var(--esp-32);
+    }
+
+    h3 {
+        margin-top: var(--esp-40);
+    }
+
+    th,
+    td {
+        padding: 12px 14px;
+    }
+
+    .caso {
+        padding: 52px 22px 24px;
+    }
+
+    .idea {
+        padding: 24px;
+    }
+
+    .conclusion {
+        border-radius: 28px;
+    }
+
+    .conclusion__sticker--a {
+        width: 120px;
+        height: 120px;
+    }
+
+    .conclusion__sticker--b {
+        display: none;
+    }
+
+    .pie {
+        margin: 8px;
+        border-radius: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .rejilla-ideas {
+        grid-template-columns: 1fr;
+    }
+
+    .lista-tarjetas li {
+        padding: 18px 18px 18px 48px;
+    }
+
+    .lista-tarjetas li::before {
+        left: 18px;
+    }
+}
+
+/* ---------- 17. Preferencias de movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        transition-delay: 0s !important;
+    }
+
+    .js .revelar,
+    .js .lista-tarjetas.revelar li {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- 18. Impresión ---------- */
+@media print {
+    .progreso,
+    .menu,
+    .sticker,
+    .cinta,
+    .conclusion__sticker {
+        display: none !important;
+    }
+
+    .hero,
+    .banda,
+    .conclusion,
+    .pie {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .js .revelar,
+    .js .lista-tarjetas.revelar li {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
